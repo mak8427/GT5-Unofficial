@@ -1195,6 +1195,13 @@ public final class RecipeMaps {
         .neiHandlerInfo(builder -> builder.setDisplayStack(GTModHandler.getIC2Item("nuclearReactor", 1, null)))
         .build();
 
+    public static final RecipeMap<RecipeMapBackend> nanochipAssemblyMatrixRecipes = RecipeMapBuilder
+        .of("gt.recipe.nanochip.assemblymatrix")
+        .maxIO(9, 1, 4, 0)
+        .minInputs(0, 0)
+        .disableOptimize()
+        .build();
+
     static {
         RecipeMaps.dieselFuels.addDownstream(
             IRecipeMap.newRecipeMap(
@@ -1229,5 +1236,8 @@ public final class RecipeMaps {
                     b.copy()
                         .duration(1 * TICK)
                         .eut(TierEU.RECIPE_UEV))));
+
+        // Add transformer from circuit assembler recipes to nanochip assembly matrix recipe
+        RecipeMaps.circuitAssemblerRecipes.addDownstream(AssemblyMatrix.recipeTransformer);
     }
 }
