@@ -5,20 +5,24 @@ import static gregtech.api.enums.Mods.Avaritia;
 import static gregtech.api.enums.Mods.GTNHIntergalactic;
 import static gregtech.api.enums.Mods.NEICustomDiagrams;
 import static gregtech.api.enums.Mods.Railcraft;
-import static gregtech.api.enums.TickTime.TICK;
-import static gregtech.api.util.GTModHandler.getModItem;
-import static gregtech.api.util.GTRecipeConstants.ADDITIVE_AMOUNT;
-import static gregtech.api.util.GTRecipeConstants.FUEL_VALUE;
-import static gregtech.api.util.GTRecipeConstants.SIEVERTS;
-import static gregtech.api.util.GTRecipeMapUtil.GTRecipeTemplate;
-import static gregtech.api.util.GTRecipeMapUtil.asTemplate;
-import static gregtech.api.util.GTRecipeMapUtil.buildOrEmpty;
-import static gregtech.api.util.GTUtility.clamp;
-import static gregtech.api.util.GTUtility.copyAmount;
-import static gregtech.api.util.GTUtility.getFluidForFilledItem;
-import static gregtech.api.util.GTUtility.isArrayEmptyOrNull;
-import static gregtech.api.util.GTUtility.isArrayOfLength;
-import static gregtech.api.util.GTUtility.multiplyStack;
+import static gregtech.api.util.GT_RecipeConstants.ADDITIVE_AMOUNT;
+import static gregtech.api.util.GT_RecipeConstants.FUEL_VALUE;
+import static gregtech.api.util.GT_RecipeMapUtil.FIRST_FLUIDSTACK_INPUT;
+import static gregtech.api.util.GT_RecipeMapUtil.FIRST_FLUIDSTACK_OUTPUT;
+import static gregtech.api.util.GT_RecipeMapUtil.FIRST_FLUID_OUTPUT;
+import static gregtech.api.util.GT_RecipeMapUtil.FIRST_ITEM_INPUT;
+import static gregtech.api.util.GT_RecipeMapUtil.FIRST_ITEM_OR_FLUID_INPUT;
+import static gregtech.api.util.GT_RecipeMapUtil.FIRST_ITEM_OR_FLUID_OUTPUT;
+import static gregtech.api.util.GT_RecipeMapUtil.FIRST_ITEM_OUTPUT;
+import static gregtech.api.util.GT_RecipeMapUtil.GT_RecipeTemplate;
+import static gregtech.api.util.GT_RecipeMapUtil.asTemplate;
+import static gregtech.api.util.GT_RecipeMapUtil.buildOrEmpty;
+import static gregtech.api.util.GT_Utility.clamp;
+import static gregtech.api.util.GT_Utility.copyAmount;
+import static gregtech.api.util.GT_Utility.getFluidForFilledItem;
+import static gregtech.api.util.GT_Utility.isArrayEmptyOrNull;
+import static gregtech.api.util.GT_Utility.isArrayOfLength;
+import static gregtech.api.util.GT_Utility.multiplyStack;
 
 import java.util.ArrayList;
 import java.util.Collection;
@@ -1238,6 +1242,6 @@ public final class RecipeMaps {
                         .eut(TierEU.RECIPE_UEV))));
 
         // Add transformer from circuit assembler recipes to nanochip assembly matrix recipe
-        RecipeMaps.circuitAssemblerRecipes.addDownstream(AssemblyMatrix.recipeTransformer);
+        RecipeMaps.circuitAssemblerRecipes.addDownstream(assemblyMatrixRecipeTransformer);
     }
 }
