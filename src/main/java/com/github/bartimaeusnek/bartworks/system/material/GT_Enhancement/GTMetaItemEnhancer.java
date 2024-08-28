@@ -13,6 +13,7 @@
 
 package com.github.bartimaeusnek.bartworks.system.material.GT_Enhancement;
 
+import static gregtech.api.enums.Mods.BartWorks;
 import static gregtech.api.enums.Mods.Forestry;
 import static gregtech.api.recipe.RecipeMaps.fluidCannerRecipes;
 import static gregtech.api.util.GT_RecipeBuilder.TICKS;
@@ -21,6 +22,7 @@ import static gregtech.api.util.GT_RecipeBuilder.WILDCARD;
 import java.util.List;
 import java.util.stream.Collectors;
 
+import codechicken.nei.api.API;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraftforge.fluids.Fluid;
@@ -28,7 +30,6 @@ import net.minecraftforge.fluids.FluidContainerRegistry;
 import net.minecraftforge.fluids.FluidStack;
 import net.minecraftforge.oredict.OreDictionary;
 
-import codechicken.nei.api.API;
 import gregtech.api.enums.GT_Values;
 import gregtech.api.enums.Materials;
 import gregtech.api.enums.OrePrefixes;
