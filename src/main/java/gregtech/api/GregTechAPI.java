@@ -22,7 +22,6 @@ import java.util.stream.Collectors;
 
 import javax.annotation.Nonnull;
 
-import gregtech.common.blocks.BlockCasingsAbstract;
 import net.minecraft.block.Block;
 import net.minecraft.client.renderer.texture.IIconRegister;
 import net.minecraft.creativetab.CreativeTabs;
@@ -65,6 +64,7 @@ import gregtech.api.util.GTUtility;
 import gregtech.api.util.item.ItemHolder;
 import gregtech.api.world.GTWorldgen;
 import gregtech.common.GTDummyWorld;
+import gregtech.common.blocks.BlockCasingsAbstract;
 import gregtech.common.items.ItemIntegratedCircuit;
 
 /**
