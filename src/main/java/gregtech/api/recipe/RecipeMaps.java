@@ -5,24 +5,13 @@ import static gregtech.api.enums.Mods.Avaritia;
 import static gregtech.api.enums.Mods.GTNHIntergalactic;
 import static gregtech.api.enums.Mods.NEICustomDiagrams;
 import static gregtech.api.enums.Mods.Railcraft;
-import static gregtech.api.util.GT_RecipeConstants.ADDITIVE_AMOUNT;
-import static gregtech.api.util.GT_RecipeConstants.FUEL_VALUE;
-import static gregtech.api.util.GT_RecipeMapUtil.FIRST_FLUIDSTACK_INPUT;
-import static gregtech.api.util.GT_RecipeMapUtil.FIRST_FLUIDSTACK_OUTPUT;
-import static gregtech.api.util.GT_RecipeMapUtil.FIRST_FLUID_OUTPUT;
-import static gregtech.api.util.GT_RecipeMapUtil.FIRST_ITEM_INPUT;
-import static gregtech.api.util.GT_RecipeMapUtil.FIRST_ITEM_OR_FLUID_INPUT;
-import static gregtech.api.util.GT_RecipeMapUtil.FIRST_ITEM_OR_FLUID_OUTPUT;
-import static gregtech.api.util.GT_RecipeMapUtil.FIRST_ITEM_OUTPUT;
-import static gregtech.api.util.GT_RecipeMapUtil.GT_RecipeTemplate;
-import static gregtech.api.util.GT_RecipeMapUtil.asTemplate;
-import static gregtech.api.util.GT_RecipeMapUtil.buildOrEmpty;
-import static gregtech.api.util.GT_Utility.clamp;
-import static gregtech.api.util.GT_Utility.copyAmount;
-import static gregtech.api.util.GT_Utility.getFluidForFilledItem;
-import static gregtech.api.util.GT_Utility.isArrayEmptyOrNull;
-import static gregtech.api.util.GT_Utility.isArrayOfLength;
-import static gregtech.api.util.GT_Utility.multiplyStack;
+import static gregtech.api.enums.TickTime.TICK;
+import static gregtech.api.util.GTModHandler.getModItem;
+import static gregtech.api.util.GTRecipeConstants.*;
+import static gregtech.api.util.GTRecipeMapUtil.asTemplate;
+import static gregtech.api.util.GTRecipeMapUtil.buildOrEmpty;
+import static gregtech.api.util.GTUtility.*;
+import static gregtech.common.tileentities.machines.multi.nanochip.util.RecipeHandlers.assemblyMatrixRecipeTransformer;
 
 import java.util.ArrayList;
 import java.util.Collection;
@@ -30,6 +19,10 @@ import java.util.Collections;
 import java.util.Comparator;
 import java.util.Optional;
 
+import gregtech.api.util.*;
+import gregtech.common.tileentities.machines.multi.nanochip.MTENanochipAssemblyComplex;
+import gregtech.common.tileentities.machines.multi.nanochip.modules.*;
+import gregtech.common.tileentities.machines.multi.nanochip.util.CircuitComponent;
 import net.minecraft.init.Blocks;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
@@ -78,11 +71,6 @@ import gregtech.api.recipe.maps.UnpackagerBackend;
 import gregtech.api.recipe.metadata.CompressionTierKey;
 import gregtech.api.recipe.metadata.PCBFactoryTierKey;
 import gregtech.api.recipe.metadata.PurificationPlantBaseChanceKey;
-import gregtech.api.util.GTModHandler;
-import gregtech.api.util.GTOreDictUnificator;
-import gregtech.api.util.GTRecipe;
-import gregtech.api.util.GTRecipeConstants;
-import gregtech.api.util.GTUtility;
 import gregtech.common.tileentities.machines.multi.purification.PurifiedWaterHelpers;
 import gregtech.nei.formatter.FuelSpecialValueFormatter;
 import gregtech.nei.formatter.FusionSpecialValueFormatter;
@@ -623,7 +611,7 @@ public final class RecipeMaps {
                 return Collections.emptyList();
             int aCoalAmount = builder.getMetadataOrDefault(ADDITIVE_AMOUNT, 0);
             if (aCoalAmount <= 0) return Collections.emptyList();
-            GTRecipeTemplate coll = asTemplate(rr.get());
+            GTRecipeMapUtil.GTRecipeTemplate coll = asTemplate(rr.get());
             for (Materials coal : new Materials[] { Materials.Coal, Materials.Charcoal }) {
                 coll.derive()
                     .setInputs(aInput1, aInput2, coal.getGems(aCoalAmount))
@@ -726,7 +714,7 @@ public final class RecipeMaps {
                 .build();
             if (!t.isPresent()) return Collections.emptyList();
             ItemStack input = b.getItemInputBasic(0);
-            GTRecipeTemplate coll = asTemplate(t.get());
+            GTRecipeMapUtil.GTRecipeTemplate coll = asTemplate(t.get());
             int tExplosives = Math.min(b.getMetadataOrDefault(ADDITIVE_AMOUNT, 0), 64);
             int tGunpowder = tExplosives << 1; // Worst
             int tDynamite = Math.max(1, tExplosives >> 1); // good
@@ -1208,7 +1196,7 @@ public final class RecipeMaps {
             // Register fallback localized name based on input item
             ItemStack input = recipe.mInputs[0];
             CircuitComponent output = CircuitComponent.getFromFakeStack(recipe.mOutputs[0]);
-            GT_MetaTileEntity_NanochipAssemblyComplex.registerLocalName(input, output);
+            MTENanochipAssemblyComplex.registerLocalName(input, output);
             return recipe;
         })
         .build();

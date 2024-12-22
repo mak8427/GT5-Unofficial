@@ -22,6 +22,7 @@ import java.util.stream.Collectors;
 
 import javax.annotation.Nonnull;
 
+import gregtech.common.blocks.BlockCasingsAbstract;
 import net.minecraft.block.Block;
 import net.minecraft.client.renderer.texture.IIconRegister;
 import net.minecraft.creativetab.CreativeTabs;
@@ -678,7 +679,7 @@ public class GregTechAPI {
      * @return A valid texture index
      */
     public static int getCasingTextureIndex(Block block, int meta) {
-        if (block instanceof GT_Block_Casings_Abstract gtBlock) {
+        if (block instanceof BlockCasingsAbstract gtBlock) {
             return gtBlock.getTextureIndex(meta);
         }
         throw new IllegalArgumentException("Passed non-gt casing block to getCasingTextureIndex");
