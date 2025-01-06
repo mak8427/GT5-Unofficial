@@ -1,6 +1,6 @@
 package goodgenerator.loader;
 
-import static bartworks.system.material.WerkstoffLoader.*;
+import static bartworks.system.material.WerkstoffLoader.Ruridit;
 import static goodgenerator.api.recipe.GoodGeneratorRecipeMaps.componentAssemblyLineRecipes;
 import static gregtech.api.enums.ItemList.*;
 import static gregtech.api.enums.Materials.*;
@@ -12,10 +12,12 @@ import static gregtech.api.enums.TierEU.RECIPE_LV;
 import static gregtech.api.enums.TierEU.RECIPE_LuV;
 import static gregtech.api.enums.TierEU.RECIPE_MV;
 import static gregtech.api.enums.TierEU.RECIPE_ULV;
-import static gregtech.api.util.GTRecipeBuilder.*;
+import static gregtech.api.enums.TierEU.RECIPE_ZPM;
+import static gregtech.api.util.GTRecipeBuilder.MINUTES;
+import static gregtech.api.util.GTRecipeBuilder.SECONDS;
 import static gregtech.api.util.GTRecipeConstants.COAL_CASING_TIER;
 import static gregtech.api.util.GTUtility.getIntegratedCircuit;
-import static gtPlusPlus.core.material.MaterialsAlloy.*;
+import static gtPlusPlus.core.material.MaterialsAlloy.INDALLOY_140;
 
 import net.minecraft.item.ItemStack;
 
@@ -66,20 +68,20 @@ import gregtech.api.util.GTOreDictUnificator;
 public class ComponentAssemblyLineRecipeLoader2 {
 
     private static final int L = (int) GTValues.L;
-    private static final int // todo double check tiers
-        COAL_LV  = 0,
-        COAL_MV  = 1,
-        COAL_HV  = 2,
-        COAL_EV  = 3,
-        COAL_IV  = 4,
-        COAL_LuV = 5,
-        COAL_ZPM = 6,
-        COAL_UV  = 7,
-        COAL_UHV = 8,
-        COAL_UEV = 9,
-        COAL_UIV = 10,
-        COAL_UMV = 11,
-        COAL_UXV = 12;
+    private static final int
+        COAL_LV  = 1,
+        COAL_MV  = 2,
+        COAL_HV  = 3,
+        COAL_EV  = 4,
+        COAL_IV  = 5,
+        COAL_LuV = 6,
+        COAL_ZPM = 7,
+        COAL_UV  = 8,
+        COAL_UHV = 9,
+        COAL_UEV = 10,
+        COAL_UIV = 11,
+        COAL_UMV = 12,
+        COAL_UXV = 13;
 
     private static final int
         MOTOR_CIRCUIT     = 1,
@@ -997,6 +999,24 @@ public class ComponentAssemblyLineRecipeLoader2 {
         // Pump
         // Conveyor
         // Sensor
+        GTValues.RA.stdBuilder()
+            .itemOutputs(Sensor_UV.get(64))
+            .itemInputs(
+                get(frameGt, Neutronium, 48),
+                Electric_Motor_UV.get(48),
+                get(plateDense, Neutronium, 42),
+                Gravistar.get(192),
+                get(wrapCircuit, UV, 12),
+                getIntegratedCircuit(SENSOR_CIRCUIT))
+            .fluidInputs(
+                Naquadria.getMolten(2736 * L),
+                INDALLOY_140.getFluidStack(768 * L),
+                NaquadahAlloy.getMolten(672 * L))
+            .duration(24 * MINUTES)
+            .eut(RECIPE_ZPM)
+            .metadata(COAL_CASING_TIER, COAL_UV)
+            .addTo(componentAssemblyLineRecipes);
+
         // Emitter
         // Field Generator
     }
