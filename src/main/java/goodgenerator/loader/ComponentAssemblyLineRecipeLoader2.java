@@ -994,10 +994,103 @@ public class ComponentAssemblyLineRecipeLoader2 {
 
     private static void uvRecipes() {
         // Motor
+        GTValues.RA.stdBuilder()
+            .itemOutputs(Electric_Motor_UV.get(64))
+            .itemInputs(
+                get(cableGt16, NaquadahAlloy, 24),
+                getIntegratedCircuit(MOTOR_CIRCUIT))
+            .fluidInputs(
+                Naquadria.getMolten(432 * L),
+                INDALLOY_140.getFluidStack(432 * L),
+                Lubricant.getFluid(96000),
+                Neutronium.getMolten(2304 * L),
+                Samarium.getMolten(96 * L),
+                Americium.getMolten(2304 * L))
+            .duration(24 * MINUTES)
+            .eut(RECIPE_ZPM)
+            .metadata(COAL_CASING_TIER, COAL_UV)
+            .addTo(componentAssemblyLineRecipes);
+
         // Piston
+        GTValues.RA.stdBuilder()
+            .itemOutputs(Electric_Piston_UV.get(64))
+            .itemInputs(
+                Electric_Motor_UV.get(48),
+                get(plateDense, Neutronium, 32),
+                get(cableGt16, NaquadahAlloy, 48),
+                getIntegratedCircuit(PISTON_CIRCUIT))
+            .fluidInputs(
+                Naquadria.getMolten(432 * L),
+                INDALLOY_140.getFluidStack(432 * L),
+                Lubricant.getFluid(96000),
+                Neutronium.getMolten(602 * L + 96))
+            .duration(24 * MINUTES)
+            .eut(RECIPE_ZPM)
+            .metadata(COAL_CASING_TIER, COAL_UV)
+            .addTo(componentAssemblyLineRecipes);
+
         // Robot Arm
-        // Pump
-        // Conveyor
+        GTValues.RA.stdBuilder()
+            .itemOutputs(Robot_Arm_UV.get(64))
+            .itemInputs(
+                Electric_Motor_UV.get(96),
+                Electric_Piston_UV.get(48),
+                get(wrapCircuit, UV, 6),
+                get(wrapCircuit, Materials.ZPM, 12),
+                get(wrapCircuit, LuV, 24),
+                getIntegratedCircuit(ROBOT_ARM_CIRCUIT))
+            .fluidInputs(
+                Naquadria.getMolten(432 * L),
+                INDALLOY_140.getFluidStack(768 * L),
+                Lubricant.getFluid(96000),
+                Neutronium.getMolten(528 * L),
+                NaquadahAlloy.getMolten(576 * L))
+            .duration(24 * MINUTES)
+            .eut(RECIPE_ZPM)
+            .metadata(COAL_CASING_TIER, COAL_UV)
+            .addTo(componentAssemblyLineRecipes);
+
+        for (var rubber : new Materials[] { Silicone, StyreneButadieneRubber }) {
+            // Pump
+            GTValues.RA.stdBuilder()
+                .itemOutputs(Electric_Pump_UV.get(64))
+                .itemInputs(
+                    Electric_Motor_UV.get(48),
+                    get(plateDense, Neutronium, 10),
+                    get(cableGt16, NaquadahAlloy, 24),
+                    getIntegratedCircuit(PUMP_CIRCUIT))
+                .fluidInputs(
+                    Naquadria.getMolten(432 * L),
+                    INDALLOY_140.getFluidStack(768 * L),
+                    Lubricant.getFluid(96000),
+                    Neutronium.getMolten(450 * L + 96),
+                    rubber.getMolten(192 * L),
+                    Naquadah.getMolten(576 * L))
+                .duration(24 * MINUTES)
+                .eut(RECIPE_ZPM)
+                .metadata(COAL_CASING_TIER, COAL_UV)
+                .addTo(componentAssemblyLineRecipes);
+
+            // Conveyor
+            GTValues.RA.stdBuilder()
+                .itemOutputs(Conveyor_Module_UV.get(64))
+                .itemInputs(
+                    Electric_Motor_UV.get(96),
+                    get(plateDense, Neutronium, 10),
+                    get(cableGt16, NaquadahAlloy, 24),
+                    getIntegratedCircuit(CONVEYOR_CIRCUIT))
+                .fluidInputs(
+                    Naquadria.getMolten(432 * L),
+                    INDALLOY_140.getFluidStack(432 * L),
+                    Lubricant.getFluid(96000),
+                    Neutronium.getMolten(218 * L + 96),
+                    rubber.getMolten(1917 * L))
+                .duration(24 * MINUTES)
+                .eut(RECIPE_ZPM)
+                .metadata(COAL_CASING_TIER, COAL_UV)
+                .addTo(componentAssemblyLineRecipes);
+        }
+
         // Sensor
         GTValues.RA.stdBuilder()
             .itemOutputs(Sensor_UV.get(64))
@@ -1018,7 +1111,42 @@ public class ComponentAssemblyLineRecipeLoader2 {
             .addTo(componentAssemblyLineRecipes);
 
         // Emitter
+        GTValues.RA.stdBuilder()
+            .itemOutputs(Emitter_UV.get(64))
+            .itemInputs(
+                get(frameGt, Neutronium, 48),
+                Electric_Motor_UV.get(48),
+                Gravistar.get(192),
+                get(wrapCircuit, UV, 12),
+                getIntegratedCircuit(EMITTER_CIRCUIT))
+            .fluidInputs(
+                Naquadria.getMolten(2736 * L),
+                INDALLOY_140.getFluidStack(768 * L),
+                Neutronium.getMolten(192 * L),
+                NaquadahAlloy.getMolten(672 * L))
+            .duration(24 * MINUTES)
+            .eut(RECIPE_ZPM)
+            .metadata(COAL_CASING_TIER, COAL_UV)
+            .addTo(componentAssemblyLineRecipes);
+
         // Field Generator
+        GTValues.RA.stdBuilder()
+            .itemOutputs(Field_Generator_UV.get(64))
+            .itemInputs(
+                get(frameGt, Neutronium, 48),
+                get(plateDense, Neutronium, 32),
+                Gravistar.get(96),
+                Emitter_UV.get(192),
+                get(wrapCircuit, UHV, 12))
+            .fluidInputs(
+                Naquadria.getMolten(432 * L),
+                INDALLOY_140.getFluidStack(768 * L),
+                Neutronium.getMolten(2304 * L),
+                NaquadahAlloy.getMolten(768 * L))
+            .duration(24 * MINUTES)
+            .eut(RECIPE_ZPM)
+            .metadata(COAL_CASING_TIER, COAL_UV)
+            .addTo(componentAssemblyLineRecipes);
     }
 
     private static void uhvRecipes() {
