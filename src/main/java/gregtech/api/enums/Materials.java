@@ -2584,7 +2584,6 @@ public class Materials implements IColorModulationContainer, ISubTagContainer {
         MaterialsUEVplus.ExoHalkonite.renderer = new InfinityRenderer();
         MaterialsUEVplus.HotExoHalkonite.renderer = new InfinityRenderer();
         MaterialsUEVplus.QuanticalDisturbance.renderer = new GaiaSpiritRenderer();
-        MaterialsUEVplus.Fractal.renderer = new TranscendentMetalRenderer();
     }
 
     private static void fillGeneratedMaterialsMap() {
