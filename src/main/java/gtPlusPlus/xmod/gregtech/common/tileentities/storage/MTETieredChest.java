@@ -1,5 +1,7 @@
 package gtPlusPlus.xmod.gregtech.common.tileentities.storage;
 
+import com.gtnewhorizons.modularui.common.widget.CycleButtonWidget;
+import gregtech.api.util.GTTooltipDataCache;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
@@ -25,6 +27,8 @@ import gregtech.api.metatileentity.implementations.MTETieredMachineBlock;
 import gregtech.api.objects.GTRenderedTexture;
 import gregtech.api.util.GTUtility;
 import gtPlusPlus.core.lib.GTPPCore;
+
+import static gregtech.api.metatileentity.BaseTileEntity.TOOLTIP_DELAY;
 
 @Deprecated
 // GT++ was adding super chests too for some reason when GT already has some
@@ -268,7 +272,6 @@ public class MTETieredChest extends MTETieredMachineBlock implements IAddUIWidge
             .setVariableBackground(GTUITextures.BUTTON_STANDARD_TOGGLE)
             // Here we reuse the tank’s auto-output texture; you can replace this with a chest-specific texture.
             .setStaticTexture(GTUITextures.OVERLAY_BUTTON_AUTOOUTPUT_FLUID)
-            .setGTTooltip(() -> "Toggle Auto-Output")
             .setTooltipShowUpDelay(TOOLTIP_DELAY)
             .setPos(7, 63)
             .setSize(18, 18));
@@ -283,7 +286,6 @@ public class MTETieredChest extends MTETieredMachineBlock implements IAddUIWidge
             .setVariableBackground(GTUITextures.BUTTON_STANDARD_TOGGLE)
             // Reusing an existing texture – replace if you have a dedicated icon.
             .setStaticTexture(GTUITextures.OVERLAY_BUTTON_TANK_VOID_EXCESS)
-            .setGTTooltip(() -> "Toggle Void When Full")
             .setTooltipShowUpDelay(TOOLTIP_DELAY)
             .setPos(25, 63)
             .setSize(18, 18));
@@ -297,7 +299,6 @@ public class MTETieredChest extends MTETieredMachineBlock implements IAddUIWidge
             })
             .setVariableBackground(GTUITextures.BUTTON_STANDARD_TOGGLE)
             .setStaticTexture(GTUITextures.OVERLAY_BUTTON_TANK_VOID_ALL)
-            .setGTTooltip(() -> "Toggle Void Everything")
             .setTooltipShowUpDelay(TOOLTIP_DELAY)
             .setPos(43, 63)
             .setSize(18, 18));
@@ -320,7 +321,6 @@ public class MTETieredChest extends MTETieredMachineBlock implements IAddUIWidge
             })
             .setVariableBackground(GTUITextures.BUTTON_STANDARD_TOGGLE)
             .setStaticTexture(GTUITextures.OVERLAY_BUTTON_LOCK)
-            .setGTTooltip(() -> "Toggle Item Lock")
             .setTooltipShowUpDelay(TOOLTIP_DELAY)
             .setPos(61, 63)
             .setSize(18, 18));
@@ -334,7 +334,6 @@ public class MTETieredChest extends MTETieredMachineBlock implements IAddUIWidge
             })
             .setVariableBackground(GTUITextures.BUTTON_STANDARD_TOGGLE)
             .setStaticTexture(GTUITextures.OVERLAY_BUTTON_INPUT_FROM_OUTPUT_SIDE)
-            .setGTTooltip(() -> "Toggle Input from Output Side")
             .setTooltipShowUpDelay(TOOLTIP_DELAY)
             .setPos(79, 63)
             .setSize(18, 18));
