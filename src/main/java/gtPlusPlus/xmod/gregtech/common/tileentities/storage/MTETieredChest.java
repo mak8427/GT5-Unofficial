@@ -30,7 +30,12 @@ import gtPlusPlus.core.lib.GTPPCore;
 // GT++ was adding super chests too for some reason when GT already has some
 // this is deprecated but not deleted because it is used for the MTEInfiniteItemHolder
 public class MTETieredChest extends MTETieredMachineBlock implements IAddUIWidgets {
-
+    public boolean mAutoOutput = false;
+    public boolean mVoidWhenFull = false;
+    public boolean mVoidEverything = false;
+    public boolean mLockItems = false;
+    public boolean mAllowInputFromOutputSide = false;
+    public ItemStack mLockedItem = null;
     public int mItemCount = 0;
     public ItemStack mItemStack = null;
     private static final double mStorageFactor = (270000.0D / 16);
@@ -182,22 +187,29 @@ public class MTETieredChest extends MTETieredMachineBlock implements IAddUIWidge
 
     @Override
     public void saveNBTData(NBTTagCompound aNBT) {
-        aNBT.setInteger("mItemCount", this.mItemCount);
-        if (this.mItemStack != null) {
-            aNBT.setTag("mItemStack", this.mItemStack.writeToNBT(new NBTTagCompound()));
+        aNBT.setBoolean("mAutoOutput", this.mAutoOutput);
+        aNBT.setBoolean("mVoidWhenFull", this.mVoidWhenFull);
+        aNBT.setBoolean("mVoidEverything", this.mVoidEverything);
+        aNBT.setBoolean("mLockItems", this.mLockItems);
+        aNBT.setBoolean("mAllowInputFromOutputSide", this.mAllowInputFromOutputSide);
+        // Optionally, save the locked item if needed:
+        if (this.mLockItems && this.mLockedItem != null) {
+            aNBT.setTag("mLockedItem", this.mLockedItem.writeToNBT(new NBTTagCompound()));
         }
     }
 
     @Override
     public void loadNBTData(NBTTagCompound aNBT) {
-        if (aNBT.hasKey("mItemCount")) {
-            this.mItemCount = aNBT.getInteger("mItemCount");
-        }
-
-        if (aNBT.hasKey("mItemStack")) {
-            this.mItemStack = ItemStack.loadItemStackFromNBT((NBTTagCompound) aNBT.getTag("mItemStack"));
+        this.mAutoOutput = aNBT.getBoolean("mAutoOutput");
+        this.mVoidWhenFull = aNBT.getBoolean("mVoidWhenFull");
+        this.mVoidEverything = aNBT.getBoolean("mVoidEverything");
+        this.mLockItems = aNBT.getBoolean("mLockItems");
+        this.mAllowInputFromOutputSide = aNBT.getBoolean("mAllowInputFromOutputSide");
+        if (this.mLockItems && aNBT.hasKey("mLockedItem")) {
+            this.mLockedItem = ItemStack.loadItemStackFromNBT(aNBT.getCompoundTag("mLockedItem"));
         }
     }
+
 
     public ITexture[] getTexture(IGregTechTileEntity aBaseMetaTileEntity, ForgeDirection side, ForgeDirection facing,
         int aColorIndex, boolean aActive, boolean aRedstone) {
@@ -219,10 +231,11 @@ public class MTETieredChest extends MTETieredMachineBlock implements IAddUIWidge
 
     @Override
     public void addUIWidgets(ModularWindow.Builder builder, UIBuildContext buildContext) {
+        // Standard chest display widgets: background, input slot, output slot, phantom (display) slot, and item count text.
         builder.widget(
-            new DrawableWidget().setDrawable(GTUITextures.PICTURE_SCREEN_BLACK)
-                .setPos(7, 16)
-                .setSize(71, 45))
+                new DrawableWidget().setDrawable(GTUITextures.PICTURE_SCREEN_BLACK)
+                    .setPos(7, 16)
+                    .setSize(71, 45))
             .widget(
                 new SlotWidget(inventoryHandler, 0)
                     .setBackground(getGUITextureSet().getItemSlot(), GTUITextures.OVERLAY_SLOT_IN)
@@ -243,5 +256,88 @@ public class MTETieredChest extends MTETieredMachineBlock implements IAddUIWidge
                 new TextWidget().setStringSupplier(() -> numberFormat.format(mItemCount))
                     .setDefaultColor(COLOR_TEXT_WHITE.get())
                     .setPos(10, 30));
+
+
+        // 1. Auto-Output Toggle: Automatically push items out to an adjacent inventory.
+        builder.widget(new CycleButtonWidget()
+            .setToggle(() -> mAutoOutput, val -> {
+                mAutoOutput = val;
+                GTUtility.sendChatToPlayer(buildContext.getPlayer(),
+                    mAutoOutput ? "Auto-Output Enabled" : "Auto-Output Disabled");
+            })
+            .setVariableBackground(GTUITextures.BUTTON_STANDARD_TOGGLE)
+            // Here we reuse the tank’s auto-output texture; you can replace this with a chest-specific texture.
+            .setStaticTexture(GTUITextures.OVERLAY_BUTTON_AUTOOUTPUT_FLUID)
+            .setGTTooltip(() -> "Toggle Auto-Output")
+            .setTooltipShowUpDelay(TOOLTIP_DELAY)
+            .setPos(7, 63)
+            .setSize(18, 18));
+
+        // 2. Void When Full Toggle: When storage is full, void incoming items.
+        builder.widget(new CycleButtonWidget()
+            .setToggle(() -> mVoidWhenFull, val -> {
+                mVoidWhenFull = val;
+                GTUtility.sendChatToPlayer(buildContext.getPlayer(),
+                    mVoidWhenFull ? "Void When Full Enabled" : "Void When Full Disabled");
+            })
+            .setVariableBackground(GTUITextures.BUTTON_STANDARD_TOGGLE)
+            // Reusing an existing texture – replace if you have a dedicated icon.
+            .setStaticTexture(GTUITextures.OVERLAY_BUTTON_TANK_VOID_EXCESS)
+            .setGTTooltip(() -> "Toggle Void When Full")
+            .setTooltipShowUpDelay(TOOLTIP_DELAY)
+            .setPos(25, 63)
+            .setSize(18, 18));
+
+        // 3. Void Everything Toggle: Void all incoming items (ignoring even current storage contents).
+        builder.widget(new CycleButtonWidget()
+            .setToggle(() -> mVoidEverything, val -> {
+                mVoidEverything = val;
+                GTUtility.sendChatToPlayer(buildContext.getPlayer(),
+                    mVoidEverything ? "Void Everything Enabled" : "Void Everything Disabled");
+            })
+            .setVariableBackground(GTUITextures.BUTTON_STANDARD_TOGGLE)
+            .setStaticTexture(GTUITextures.OVERLAY_BUTTON_TANK_VOID_ALL)
+            .setGTTooltip(() -> "Toggle Void Everything")
+            .setTooltipShowUpDelay(TOOLTIP_DELAY)
+            .setPos(43, 63)
+            .setSize(18, 18));
+
+        // 4. Lock Items Toggle: Only allow a specific item to be stored.
+        builder.widget(new CycleButtonWidget()
+            .setToggle(() -> mLockItems, val -> {
+                mLockItems = val;
+                if (mLockItems) {
+                    // If there is an item in the input slot, lock to that item.
+                    if (mInventory[0] != null) {
+                        mLockedItem = mInventory[0].copy();
+                    }
+                    GTUtility.sendChatToPlayer(buildContext.getPlayer(), "Chest Locked" +
+                        (mLockedItem != null ? " to " + mLockedItem.getDisplayName() : ""));
+                } else {
+                    mLockedItem = null;
+                    GTUtility.sendChatToPlayer(buildContext.getPlayer(), "Item Lock Disabled");
+                }
+            })
+            .setVariableBackground(GTUITextures.BUTTON_STANDARD_TOGGLE)
+            .setStaticTexture(GTUITextures.OVERLAY_BUTTON_LOCK)
+            .setGTTooltip(() -> "Toggle Item Lock")
+            .setTooltipShowUpDelay(TOOLTIP_DELAY)
+            .setPos(61, 63)
+            .setSize(18, 18));
+
+        // 5. Allow Input From Output Side Toggle: Change which sides accept input.
+        builder.widget(new CycleButtonWidget()
+            .setToggle(() -> mAllowInputFromOutputSide, val -> {
+                mAllowInputFromOutputSide = val;
+                GTUtility.sendChatToPlayer(buildContext.getPlayer(),
+                    mAllowInputFromOutputSide ? "Input from Output Side Enabled" : "Input from Output Side Disabled");
+            })
+            .setVariableBackground(GTUITextures.BUTTON_STANDARD_TOGGLE)
+            .setStaticTexture(GTUITextures.OVERLAY_BUTTON_INPUT_FROM_OUTPUT_SIDE)
+            .setGTTooltip(() -> "Toggle Input from Output Side")
+            .setTooltipShowUpDelay(TOOLTIP_DELAY)
+            .setPos(79, 63)
+            .setSize(18, 18));
     }
+
 }
